@@ -1,8 +1,14 @@
-# JavaScript Style
+# JavaScript Style Guide
 
 本代码规范基于 [JavaScript Standard Style](https://standardjs.com/rules-zhcn.html) 代码规范修改扩展而成。
 
 掌握本规范的最好方法是结合 [ESLint](http://eslint.cn/) 工具在代码中使用它，验证它。
+
+## 使用
+
+将 `eslint/.eslintrc.js.sample` 拷贝到项目根目录，重命名为 `.eslintrc.js`，然后使用 `npm` 或者 `yarn` 等包管理工具安装依赖包 `eslint`，成功之后执行 `./node_modules/.bin/eslint --ext .jsx,.js src/` 进行检查。
+
+具体 `ESLint` 命令参数请查看 [http://eslint.cn/docs/user-guide/command-line-interface](http://eslint.cn/docs/user-guide/command-line-interface)
 
 ## 规则细则
 
