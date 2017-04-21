@@ -2,4 +2,4 @@
 
 ## 目录
 
-* [JavaScript](http://192.168.1.121/front-end/styleguide/JavaScript.md)
+* [JavaScript](http://192.168.1.121/front-end/styleguide/blob/master/JavaScript.md)
