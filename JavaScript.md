@@ -6,6 +6,12 @@
 
 ## 使用
 
+先安装 `eslint` 以及插件 `eslint-plugin-react`
+
+```bash
+$ yarn add eslint eslint-plugin-react --dev
+```
+
 将 `eslint/.eslintrc.js.sample` 拷贝到项目根目录，重命名为 `.eslintrc.js`，然后使用 `npm` 或者 `yarn` 等包管理工具安装依赖包 `eslint`，成功之后执行 `./node_modules/.bin/eslint --ext .jsx,.js src/` 进行检查。
 
 具体 `ESLint` 命令参数请查看 [http://eslint.cn/docs/user-guide/command-line-interface](http://eslint.cn/docs/user-guide/command-line-interface)
@@ -1753,19 +1759,166 @@
   <a b='"' />
   ```
 
+* **防止 `React` 错误地标记为未使用**。
+
+  eslint-plugin-react: [`react/jsx-uses-react`](https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-uses-react.md)
+
+* **防止 JSX 中使用的变量被错误地标记为未使用**。
+
+  eslint-plugin-react: [`react/jsx-uses-vars`](https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-uses-vars.md)
+
+* **强制在 JSX 布尔属性中使用布尔值**。
+
+  eslint-plugin-react: [`jsx-boolean-value`](https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-boolean-value.md)
+
+  ```js
+  // ✗ avoid
+  const Input = <input disabled />
+
+  // ✓ ok
+  const Input = <input disabled={true} />
+  ```
+
+* **在 JSX 属性中禁止花括号内的空格**。
+
+  eslint-plugin-react: [`jsx-curly-spacing`](https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-curly-spacing.md)
+
+  ```js
+  // ✗ avoid
+  <Hello name={ firstname } />
+  <Hello name={ firstname} />
+  <Hello name={firstname } />
+
+  // ✓ ok
+  <Hello name={ firstname } />
+  <Hello name={{ firstname: 'John', lastname: 'Doe' }} />
+  <Hello name={
+    firstname
+  } />
+  ```
+
+* **在 JSX 属性中禁止在 `=` 号前后使用空格**。
+
+  eslint-plugin-react: [`jsx-equals-spacing`](https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-equals-spacing.md)
+
+  ```js
+  // ✗ avoid
+  <Hello name = { firstname } />
+  <Hello name ={ firstname} />
+  <Hello name= {firstname } />
+
+  // ✓ ok
+  <Hello name={firstname} />
+  <Hello name />
+  <Hello {...props} />
+  ```
+
+* **在 JSX 中使用 2 个空格进行缩进**。
+
+  eslint-plugin-react: [`jsx-indent`](https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-indent.md)
+
+  ```js
+  // ✗ avoid
+  <App>
+  <Hello />
+  </App>
+
+  // ✓ ok
+  <App>
+    <Hello />
+  </App>
+  ```
+
+* **在 JSX 属性中使用 2 个空格进行缩进**。
+
+  eslint-plugin-react: [`jsx-indent-props`](https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-indent-props.md)
+
+  ```js
+  // ✗ avoid
+  <Hello
+  firstName="John"
+  />
+
+  // ✓ ok
+  <Hello
+    firstName="John"
+  />
+  ```
+
+* **禁止 JSX 属性重复**。
+
+  eslint-plugin-react: [`jsx-no-duplicate-props`](https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-no-duplicate-props.md)
+
+  ```js
+  // ✗ avoid
+  <Hello name="John" name="John" />
+
+  // ✓ ok
+  <Hello firstname="John" lastname="Doe" />
+  ```
+
+* **禁止在 JSX 中使用未声明的变量**。
+
+  eslint-plugin-react: [`jsx-no-undef`](https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-no-undef.md)
+
+  ```js
+  // ✗ avoid
+  <Hello name="John" />
+
+  // ✓ ok
+  import Hello from './Hello';
+
+  <Hello name="John" />
+  ```
+
+* **强制在 JSX 中结束符前(`/>`)添加空格**。
+
+  eslint-plugin-react: [`jsx-space-before-closing`](https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-space-before-closing.md)
+
+  ```js
+  // ✗ avoid
+  <Hello/>
+  <Hello firstname="John"/>
+
+  // ✓ ok
+  <Hello />
+  <Hello firstName="John" />
+  <Hello
+    firstName="John"
+    lastName="Smith"
+  />
+  ```
+
+* **禁止在 JSX 组件中使用不必要的关闭标签(没有子元素的组件会自行关闭)**。<br/>
+  例外: 排除 html 元素。
+
+  eslint-plugin-react: [`self-closing-comp`](https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/self-closing-comp.md)
+
+  ```js
+  // ✗ avoid
+  const HelloJohn = <Hello name="John"></Hello>
+
+  // ✓ ok
+  const contentContainer = <div className="content"></div>
+  const intentionalSpace = <div>{' '}</div>
+  const HelloJohn = <Hello name="John" />
+  const Profile = <Hello name="John"><img src="picture.png" /></Hello>
+  const HelloSpace = <Hello>{' '}</Hello>
+  ```
+
+**注意:** `eslint@4.0.0-alpha.1` 在下面配置中会对 `indent` 误报:
 
 ```js
-/*
-'react/jsx-boolean-value': 'error',
-'react/jsx-curly-spacing': ['error', 'never'],
-'react/jsx-equals-spacing': ['error', 'never'],
-'react/jsx-indent': ['error', 2],
-'react/jsx-indent-props': ['error', 2],
-'react/jsx-no-duplicate-props': 'error',
-'react/jsx-no-undef': 'error',
-'react/jsx-space-before-closing': 'error',
-'react/jsx-uses-react': 'error',
-'react/jsx-uses-vars': 'error',
-'react/self-closing-comp': 'error'
-*/
+// eslintrc.js
+'rules': {
+  'indent': ['error', 2],
+  'react/jsx-indent': ['error', 2],
+},
+
+// 误报代码
+          {comments.map(item => {
+            return <li key={item.id} className="list-group-item">{item.author}: {item.comment}</li>
+          })}
 ```
+
+把 `eslint` 降级到 `3.x` 版本，误报的问题得到解决。此问题后续在 `eslint` v4 版本稳定之后，予以排查解决。
