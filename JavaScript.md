@@ -2,19 +2,14 @@
 
 本代码规范基于 [JavaScript Standard Style](https://standardjs.com/rules-zhcn.html) 代码规范修改扩展而成。
 
-掌握本规范的最好方法是结合 [ESLint](http://eslint.cn/) 工具在代码中使用它，验证它。
+掌握本规范的最好方法是结合 [q-lint-js](https://www.npmjs.com/package/q-lint-js) 工具在代码中使用它，验证它。
 
 ## 使用
 
-先安装 `eslint` 以及插件 `eslint-plugin-react`
-
 ```bash
-$ yarn add eslint eslint-plugin-react --dev
+npm install q-lint-js --save-dev
+./node_modules/.bin/q-lint-js src/**/*.js src/**/*.jsx
 ```
-
-将 `eslint/.eslintrc.js.sample` 拷贝到项目根目录，重命名为 `.eslintrc.js`，然后使用 `npm` 或者 `yarn` 等包管理工具安装依赖包 `eslint`，成功之后执行 `./node_modules/.bin/eslint --ext .jsx,.js src/` 进行检查。
-
-具体 `ESLint` 命令参数请查看 [http://eslint.cn/docs/user-guide/command-line-interface](http://eslint.cn/docs/user-guide/command-line-interface)
 
 ## 规则细则
 
@@ -25,10 +20,37 @@ $ yarn add eslint eslint-plugin-react --dev
   eslint: [`indent`](http://eslint.cn/docs/rules/indent)
 
   ```js
+  // ✗ avoid
+  function hello (name) {
+      console.log('hi', name)
+  }
+
+  fetch('xxx', {
+    body: JSON.stringify(data),
+  })
+  .then(res => res.json())
+  .then(json => {
+    // ...
+  })
+  .catch(error => {
+    console.log(error)
+  })
+
   // ✓ ok
   function hello (name) {
     console.log('hi', name)
   }
+
+  fetch('xxx', {
+    body: JSON.stringify(data),
+  })
+    .then(res => res.json())
+    .then(json => {
+      // ...
+    })
+    .catch(error => {
+      console.log(error)
+    })
   ```
 
 * 除需要转义的情况外，**字符串统一使用单引号**。
@@ -1871,11 +1893,24 @@ $ yarn add eslint eslint-plugin-react --dev
   <Hello name="John" />
   ```
 
-* **强制在 JSX 中结束符前(`/>`)添加空格**。
+* **规定 JSX 语法 `<` `>` 符号前的空格**。
 
-  eslint-plugin-react: [`jsx-space-before-closing`](https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-space-before-closing.md)
+  eslint-plugin-react: [`jsx-tag-spacing`](https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-tag-spacing.md)
 
   ```js
+  // closingSlash: "never"
+  // ✗ avoid
+  <App/ >
+  <input/
+  >
+  <Provider>< /Provider>
+
+  // ✓ ok
+  <App/>
+  <input/>
+  <Provider></Provider>
+
+  // beforeSelfClosing: "always"
   // ✗ avoid
   <Hello/>
   <Hello firstname="John"/>
@@ -1883,6 +1918,24 @@ $ yarn add eslint eslint-plugin-react --dev
   // ✓ ok
   <Hello />
   <Hello firstName="John" />
+  <Hello
+    firstName="John"
+    lastName="Smith"
+  />
+
+  // afterOpening: "never"
+  // ✗ avoid
+  < Hello></ Hello>
+  < Hello firstName="John"/>
+  <
+    Hello
+    firstName="John"
+    lastName="Smith"
+  />
+
+  // ✓ ok
+  <Hello></Hello>
+  <Hello firstname="John"/>
   <Hello
     firstName="John"
     lastName="Smith"
@@ -1905,20 +1958,3 @@ $ yarn add eslint eslint-plugin-react --dev
   const Profile = <Hello name="John"><img src="picture.png" /></Hello>
   const HelloSpace = <Hello>{' '}</Hello>
   ```
-
-**注意:** `eslint@4.0.0-alpha.1` 在下面配置中会对 `indent` 误报:
-
-```js
-// eslintrc.js
-'rules': {
-  'indent': ['error', 2],
-  'react/jsx-indent': ['error', 2],
-},
-
-// 误报代码
-          {comments.map(item => {
-            return <li key={item.id} className="list-group-item">{item.author}: {item.comment}</li>
-          })}
-```
-
-把 `eslint` 降级到 `3.x` 版本，误报的问题得到解决。此问题后续在 `eslint` v4 版本稳定之后，予以排查解决。
