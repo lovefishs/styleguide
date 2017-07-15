@@ -1,5 +1,5 @@
-# WOQU Style Guides
+# WOQU Code Style Guides
 
-## 目录
+## Table of Content
 
-* [JavaScript](http://192.168.1.121/front-end/styleguide/blob/master/JavaScript.md)
+* [JavaScript](/JavaScript.md)
